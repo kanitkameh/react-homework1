@@ -7,6 +7,8 @@ import { getLoginStatus } from './Authentication/AuthenticationService';
 import { UsersComponent } from './Users/UsersComponent';
 import { EditUserComponent } from './Users/EditUserComponent';
 import { userRepository } from './Users/UserRepository';
+import { RecipesComponent } from './Recipes/RecipesComponent';
+import { AddRecipeForm } from './Recipes/AddRecipe';
 
 
 const router = createBrowserRouter([
@@ -32,7 +34,24 @@ const router = createBrowserRouter([
                         element: <EditUserComponent />,
                         loader: ({params}) => userRepository.getUser(params.userId ?? "")
                     }
+                ],
+            },
+            {
+                path: "recipes",
+                element: <RecipesComponent/>,
+                children: [
+                    /*
+                    {
+                        path: ":recipeId",
+                        element: <EditRecipeComponent />,
+                        loader: ({params}) => userRepository.getUser(params.userId ?? "")
+                    }
+                    */
                 ]
+            },
+            {
+                path: "add-recipe",
+                element: <AddRecipeForm/>,
             }
         ]
     }

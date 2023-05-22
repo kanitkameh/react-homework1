@@ -1,6 +1,6 @@
-class Product {
-    name: String
-    constructor(name: String) { 
+export class Product {
+    name: string
+    constructor(name: string) { 
         this.name = name;
     }
 }
@@ -9,10 +9,10 @@ export class Recipe {
     name: string; //име на рецептата (до 80 символа);
     shortDescription: string; //кратко описание на рецептата (до 256 символа);
     preparationTimeInMinutes: number; //време за приготвяне (в минути);
-    products: [Product]; //използвани продукти (списък от продукти);
+    products: Product[]; //използвани продукти (списък от продукти);
     photo: URL; //снимка на резултата от рецептата (валиден URL, задължителен атрибут);
     description: string; //подробно описание (до 2048 символа);
-    tags: [String]; //ключови думи - tags (списък от тагове);
+    tags: String[]; //ключови думи - tags (списък от тагове);
     shareTime: Date; //дата и час на споделяне (генерира се автоматично);
     modificationTime: Date; //дата и час на последна модификация (генерира се автоматично);
     constructor(
@@ -20,10 +20,10 @@ export class Recipe {
         name: string, 
         shortDescription: string, 
         preparationTimeInMinutes: number, 
-        products: [Product], 
+        products: Product[], 
         photo: URL, 
         description: string, 
-        tags: [String], 
+        tags: String[], 
         shareTime: Date, 
         modificationTime: Date) 
     {
@@ -49,10 +49,10 @@ export class IdentifiableRecipe extends Recipe {
         name: string, 
         shortDescription: string, 
         preparationTimeInMinutes: number, 
-        products: [Product], 
+        products: Product[], 
         photo: URL, 
         description: string, 
-        tags: [String], 
+        tags: String[], 
         shareTime: Date, 
         modificationTime: Date) 
     {
