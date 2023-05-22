@@ -1,4 +1,16 @@
+import { userRepository } from "../Users/UserRepository";
+
 export function getLoginStatus(): string | null {
     const userId = window.sessionStorage.getItem("loggedUserId");
     return userId;
+}
+
+export function login(username: string, password: string){
+    userRepository.getUserByUsername(username).then(user => {
+        window.sessionStorage.setItem("loggedUserId", user.id);
+    })
+}
+export function logout(){
+    window.sessionStorage.removeItem("loggedUserId");
+    window.location.replace("/");
 }

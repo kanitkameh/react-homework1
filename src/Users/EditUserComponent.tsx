@@ -1,31 +1,36 @@
+import { IdentifiableUser } from "./User";
 import React, { FormEvent, useState } from 'react';
-import { AccountStatus, Gender, Role, User } from '../Users/User';
+import { AccountStatus, Gender, Role } from '../Users/User';
 import { userRepository } from '../Users/UserRepository';
+import { useLoaderData } from "react-router-dom";
 
-export function RegisterUser() {
-  const [username, setUsername] = useState('');
-  const [name, setName] = useState('');
-  const [gender, setGender] = useState('');
-  const [password, setPassword] = useState('');
-  const [photo, setPhoto] = useState('');
-  const [description, setDescription] = useState('');
+export function EditUserComponent() {
+  const user: IdentifiableUser = useLoaderData() as IdentifiableUser;
+
+  const [username, setUsername] = useState(user.username);
+  const [name, setName] = useState(user.name);
+  const [gender, setGender] = useState(user.gender);
+  const [password, setPassword] = useState(user.password);
+  const [photo, setPhoto] = useState(user.photo?.toString() ?? "");
+  const [description, setDescription] = useState(user.description);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    let user: User = new User(
+    let updatedUser: IdentifiableUser = new IdentifiableUser(
+            user.id,
             name, //име на потребителя;реализоирано
             username, //login име (username - до 15 символа - word characters);
             password, //парола (поне 8 символа, поне една цифра и знак различен от буква и цифра);
-            gender as Gender, //пол;
+            gender, //пол;
             Role.User, //потребителска роля (user или admin);
             new URL(photo), //снимка на потребителя (може да бъде URL, ако липсва се замества с аватара по подразбиране в зависимост от пола);
             description, //кратко представяне на потребителя (до 512 символа);
             AccountStatus.Active, //статус на валидност на акаунта - (active, suspended или deactivated);
-            new Date(), 
+            user.registrationTime, 
             new Date() 
             )
-    alert(JSON.stringify(user));
-    userRepository.addUser(user);
+    alert(JSON.stringify(updatedUser));
+    userRepository.updateUser(updatedUser);
   };
 
   return (
@@ -56,8 +61,8 @@ export function RegisterUser() {
         id="male"
         name="gender"
         value="Male"
-        checked={gender === 'Male'}
-        onChange={(event) => setGender(event.target.value)}
+        checked={gender === Gender.Male}
+        onChange={(event) => setGender(event.target.value as Gender)}
       />
       <label htmlFor="female">Female</label>
       <input
@@ -65,8 +70,8 @@ export function RegisterUser() {
         id="female"
         name="gender"
         value="Female"
-        checked={gender === 'Female'}
-        onChange={(event) => setGender(event.target.value)}
+        checked={gender === Gender.Female}
+        onChange={(event) => setGender(event.target.value as Gender)}
       /><br/>
 
 
@@ -99,7 +104,7 @@ export function RegisterUser() {
         onChange={(event) => setDescription(event.target.value)}
       /><br/>
 
-      <button type="submit">Register</button>
+      <button type="submit">Save User</button>
     </form>
   );
 }

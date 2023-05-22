@@ -4,6 +4,9 @@ import {Menu} from './Menu';
 import { RegisterUser } from './Authentication/RegisterUser';
 import { LoginUser } from './Authentication/LoginUser';
 import { getLoginStatus } from './Authentication/AuthenticationService';
+import { UsersComponent } from './Users/UsersComponent';
+import { EditUserComponent } from './Users/EditUserComponent';
+import { userRepository } from './Users/UserRepository';
 
 
 const router = createBrowserRouter([
@@ -19,6 +22,17 @@ const router = createBrowserRouter([
             {
                 path: "login",
                 element: <LoginUser></LoginUser>
+            },
+            {
+                path: "users",
+                element: <UsersComponent/>,
+                children: [
+                    { 
+                        path: ":userId",
+                        element: <EditUserComponent />,
+                        loader: ({params}) => userRepository.getUser(params.userId ?? "")
+                    }
+                ]
             }
         ]
     }

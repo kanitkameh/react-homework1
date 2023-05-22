@@ -19,12 +19,29 @@ class UserRepository {
         return json
     }
 
+    async getUserByUsername(username: string) {
+        let response = await fetch(this.jsonServerPath+'/users?username='+username, {
+            method: 'GET',
+        })
+        let json: IdentifiableUser = await response.json()
+        return json
+    }
+
     async getUser(userId: string){
         let response = await fetch(this.jsonServerPath+'/users/'+userId, {
             method: 'GET',
         })
         let json: IdentifiableUser = await response.json()
         return json
+    }
+    async updateUser(user: IdentifiableUser) {
+        fetch(this.jsonServerPath+'/users/'+user.id, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user)
+        })
     }
 }
 
