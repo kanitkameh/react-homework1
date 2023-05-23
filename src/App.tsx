@@ -34,7 +34,10 @@ const router = createBrowserRouter([
                 children: [
                     { 
                         path: ":userId",
-                        element: <EditUserComponent />,
+                        element: 
+                            <RequireAuthentication>
+                                <EditUserComponent />
+                            </RequireAuthentication>,
                         loader: ({params}) => userRepository.getUser(params.userId ?? "")
                     }
                 ],

@@ -1,8 +1,10 @@
 import React, { FormEvent, useState } from 'react';
 import { AccountStatus, Gender, Role, User } from '../Users/User';
 import { userRepository } from '../Users/UserRepository';
+import { useNavigate } from 'react-router-dom';
 
 export function RegisterUser() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
@@ -26,6 +28,7 @@ export function RegisterUser() {
             )
     alert(JSON.stringify(user));
     userRepository.addUser(user);
+    navigate("/");
   };
 
   return (
