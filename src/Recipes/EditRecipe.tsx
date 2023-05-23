@@ -1,26 +1,26 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { recipeRepository } from "./RecipeRepository";
-import { Product, Recipe } from "./Recipe";
+import { IdentifiableRecipe, Product, Recipe } from "./Recipe";
 import { getLoginStatus } from "../Authentication/AuthenticationService";
 import { userRepository } from "../Users/UserRepository";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { IdentifiableUser } from "../Users/User";
 
-export function AddRecipeForm() {
+export function EditRecipeForm() {
   const navigate = useNavigate();
-  const user = useLoaderData() as string | undefined;
-  if(user==null){
+  const { recipe, userId } = useLoaderData() as { recipe: IdentifiableRecipe , userId: string};
+  if(userId == null){
     navigate("/");
   }
 
   const [recipeData, setRecipeData] = useState({
-    name: "",
-    shortDescription: "",
-    preparationTimeInMinutes: "",
-    products: [] as Product[],
-    photo: "",
-    description: "",
-    tags: [] as string[],
+    name: recipe.name,
+    shortDescription: recipe.description,
+    preparationTimeInMinutes: recipe.preparationTimeInMinutes.toString(),
+    products: recipe.products,
+    photo: recipe.photo.toString(),
+    description: recipe.description,
+    tags: recipe.tags,
   });
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -57,15 +57,16 @@ export function AddRecipeForm() {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const recipe: Recipe = {
+    const updatedRecipe: IdentifiableRecipe = {
+      id: recipe.id,
       ...recipeData,
-      author: user!, // User should be redirected if not logged in
+      author: userId, // User should be redirected if not logged in
       preparationTimeInMinutes: parseInt(recipeData.preparationTimeInMinutes),
       shareTime: new Date(),
       modificationTime: new Date(),
       photo: new URL(recipeData.photo)
     };
-    recipeRepository.addRecipe(recipe);
+    recipeRepository.addRecipe(updatedRecipe);
     // Reset form data
     setRecipeData({
       name: "",
@@ -205,7 +206,7 @@ export function AddRecipeForm() {
         </button>
       </label>
       <br />
-      <button type="submit">Add Recipe</button>
+      <button type="submit">Edit Recipe</button>
     </form>
   );
 }

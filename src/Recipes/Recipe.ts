@@ -12,7 +12,7 @@ export class Recipe {
     products: Product[]; //използвани продукти (списък от продукти);
     photo: URL; //снимка на резултата от рецептата (валиден URL, задължителен атрибут);
     description: string; //подробно описание (до 2048 символа);
-    tags: String[]; //ключови думи - tags (списък от тагове);
+    tags: string[]; //ключови думи - tags (списък от тагове);
     shareTime: Date; //дата и час на споделяне (генерира се автоматично);
     modificationTime: Date; //дата и час на последна модификация (генерира се автоматично);
     constructor(
@@ -23,7 +23,7 @@ export class Recipe {
         products: Product[], 
         photo: URL, 
         description: string, 
-        tags: String[], 
+        tags: string[], 
         shareTime: Date, 
         modificationTime: Date) 
     {
@@ -52,7 +52,7 @@ export class IdentifiableRecipe extends Recipe {
         products: Product[], 
         photo: URL, 
         description: string, 
-        tags: String[], 
+        tags: string[], 
         shareTime: Date, 
         modificationTime: Date) 
     {
