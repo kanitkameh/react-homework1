@@ -1,17 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { recipeRepository } from "./RecipeRepository";
-import { IdentifiableRecipe, Product, Recipe } from "./Recipe";
-import { getLoginStatus } from "../Authentication/AuthenticationService";
-import { userRepository } from "../Users/UserRepository";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { IdentifiableUser } from "../Users/User";
+import { IdentifiableRecipe, Product } from "./Recipe";
+import { useLoaderData } from "react-router-dom";
 
 export function EditRecipeForm() {
-  const navigate = useNavigate();
   const { recipe, userId } = useLoaderData() as { recipe: IdentifiableRecipe , userId: string};
-  if(userId == null){
-    navigate("/");
-  }
 
   const [recipeData, setRecipeData] = useState({
     name: recipe.name,

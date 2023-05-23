@@ -11,6 +11,7 @@ import { RecipesComponent } from './Recipes/RecipesComponent';
 import { AddRecipeForm } from './Recipes/AddRecipe';
 import { EditRecipeForm } from './Recipes/EditRecipe';
 import { recipeRepository } from './Recipes/RecipeRepository';
+import { RequireAuthentication } from './Authentication/RequireAuthentication';
 
 
 const router = createBrowserRouter([
@@ -40,11 +41,17 @@ const router = createBrowserRouter([
             },
             {
                 path: "recipes",
-                element: <RecipesComponent/>,
+                element: 
+                    <RequireAuthentication>
+                        <RecipesComponent />
+                    </RequireAuthentication>,
                 children: [
                     {
                         path: ":recipeId",
-                        element: <EditRecipeForm/>,
+                        element: 
+                            <RequireAuthentication>
+                                <EditRecipeForm />
+                            </RequireAuthentication>,
                         loader: async ({ params }) => { 
                             const recipe = await recipeRepository.getRecipe(params.recipeId ?? ""); 
                             return { recipe: recipe, userId: getLoginStatus() };
