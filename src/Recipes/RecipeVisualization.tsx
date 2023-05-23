@@ -1,6 +1,5 @@
-import React from "react";
-import { IdentifiableRecipe, Recipe } from "./Recipe";
-import { Link } from "react-router-dom";
+import { IdentifiableRecipe } from "./Recipe";
+import './recipe.css'
 
 type RecipeProps = {
   recipe: IdentifiableRecipe;
@@ -9,6 +8,7 @@ type RecipeProps = {
 export function RecipeVisualization({ recipe }: RecipeProps) {
   return (
     <div>
+        <hr></hr>
       <h2>{recipe.name}</h2>
       <p>Author: {recipe.author}</p>
       <p>Short Description: {recipe.shortDescription}</p>
@@ -19,13 +19,14 @@ export function RecipeVisualization({ recipe }: RecipeProps) {
           <li key={index}>{product.name}</li>
         ))}
       </ul>
-      <img src={recipe.photo.toString()} alt="Recipe" />
+      <img className="recipe-image" src={recipe.photo.toString()} alt="Recipe" />
       <p>Description: {recipe.description}</p>
       <p>Tags: {recipe.tags.join(", ")}</p>
       <p>Share Time: {recipe.shareTime.toString()}</p>
       <p>Modification Time: {recipe.modificationTime.toString()}</p>
 
       <a href={"/recipes/"+recipe.id}>Edit</a>
+        <hr></hr>
     </div>
   );
 }
