@@ -3,6 +3,8 @@ import { AccountStatus, Gender, Role, User } from '../Users/User';
 import { userRepository } from '../Users/UserRepository';
 import { useNavigate } from 'react-router-dom';
 
+const defaultProfilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+
 export function RegisterUser() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
@@ -20,7 +22,7 @@ export function RegisterUser() {
             password, //парола (поне 8 символа, поне една цифра и знак различен от буква и цифра);
             gender as Gender, //пол;
             Role.User, //потребителска роля (user или admin);
-            new URL(photo), //снимка на потребителя (може да бъде URL, ако липсва се замества с аватара по подразбиране в зависимост от пола);
+            new URL(photo === ""? defaultProfilePic : photo), //снимка на потребителя (може да бъде URL, ако липсва се замества с аватара по подразбиране в зависимост от пола);
             description, //кратко представяне на потребителя (до 512 символа);
             AccountStatus.Active, //статус на валидност на акаунта - (active, suspended или deactivated);
             new Date(), 

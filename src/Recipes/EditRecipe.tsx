@@ -59,7 +59,9 @@ export function EditRecipeForm() {
       modificationTime: new Date(),
       photo: new URL(recipeData.photo)
     };
-    recipeRepository.addRecipe(updatedRecipe);
+    recipeRepository.updateRecipe(updatedRecipe);
+
+    console.log("Updated recipe to: " + JSON.stringify(updatedRecipe));
     // Reset form data
     setRecipeData({
       name: "",

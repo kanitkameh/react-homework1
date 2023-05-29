@@ -29,7 +29,7 @@ export function EditUserComponent() {
             user.registrationTime, 
             new Date() 
             )
-    alert(JSON.stringify(updatedUser));
+    console.log("Updated user to: " + JSON.stringify(updatedUser));
     userRepository.updateUser(updatedUser);
   };
 
