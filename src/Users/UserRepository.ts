@@ -15,7 +15,7 @@ class UserRepository {
         let response = await fetch(this.jsonServerPath+'/users', {
             method: 'GET',
         })
-        let json: [IdentifiableUser] = await response.json()
+        let json: IdentifiableUser[] = await response.json()
         return json
     }
 
@@ -28,6 +28,7 @@ class UserRepository {
     }
 
     async getUser(userId: string){
+        console.log("getting user "+ userId)
         let response = await fetch(this.jsonServerPath+'/users/'+userId, {
             method: 'GET',
         })

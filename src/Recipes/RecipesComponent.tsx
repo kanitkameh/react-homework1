@@ -6,13 +6,19 @@ import { recipeRepository } from './RecipeRepository';
 import { RecipeVisualization } from './RecipeVisualization';
 
 export function RecipesComponent() {
-    const [recipes, setRecipes] = useState<[IdentifiableRecipe]>();
+    const [recipes, setRecipes] = useState<IdentifiableRecipe[]>();
     useEffect(() => {
         recipeRepository.getAllRecipes().then(recipes => {
             setRecipes(recipes)
         })
     }, []);
     return (<div>
+        <div>Sort by 
+            <div onClick={() => setRecipes(recipes?.sort((a, b) => a.shareTime>b.shareTime?1:-1))}>Share Time</div>
+            <div onClick={() => setRecipes(recipes?.sort((a, b) => a.shareTime<b.shareTime?1:-1))}>Share Time Descending</div>
+        </div>
+        <div>Sort by <span onClick={() => setRecipes(recipes?.sort((a, b) => a.modificationTime>b.modificationTime?1:-1))}>Modification Time</span></div>
+
         {recipes?.map( recipe => 
             <RecipeVisualization recipe={recipe}></RecipeVisualization>
         )}

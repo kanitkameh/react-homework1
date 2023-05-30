@@ -38,7 +38,7 @@ const router = createBrowserRouter([
                             <RequireAuthentication>
                                 <EditUserComponent />
                             </RequireAuthentication>,
-                        loader: ({params}) => userRepository.getUser(params.userId ?? "")
+                        loader: async ({params}) => await userRepository.getUser(params.userId ?? "")
                     }
                 ],
             },

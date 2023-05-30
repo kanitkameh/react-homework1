@@ -15,7 +15,7 @@ class RecipeRepository {
         let response = await fetch(this.jsonServerPath+'/recipes', {
             method: 'GET',
         })
-        let json: [IdentifiableRecipe] = await response.json()
+        let json: IdentifiableRecipe[] = await response.json()
         return json
     }
 

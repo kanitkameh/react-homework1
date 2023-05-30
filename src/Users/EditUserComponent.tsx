@@ -1,5 +1,5 @@
 import { IdentifiableUser } from "./User";
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { AccountStatus, Gender, Role } from '../Users/User';
 import { userRepository } from '../Users/UserRepository';
 import { useLoaderData } from "react-router-dom";
@@ -13,6 +13,15 @@ export function EditUserComponent() {
   const [password, setPassword] = useState(user.password);
   const [photo, setPhoto] = useState(user.photo?.toString() ?? "");
   const [description, setDescription] = useState(user.description);
+
+  useEffect(() => {
+    setUsername(user.username)
+    setName(user.name)
+    setGender(user.gender)
+    setPassword(user.password)
+    setPhoto(user.photo?.toString() ??  "")
+    setDescription(user.description)
+  });
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
