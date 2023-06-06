@@ -2,6 +2,8 @@ import express from 'express';
 import { userDatabaseRepository } from './Users/UserDatabaseRepository';
 import { User } from './Users/User';
 import { ObjectId } from 'mongodb';
+import { recipeDatabaseRepository } from './Recipes/RecipeDatabaseRepository';
+import { Recipe } from './Recipes/Recipe';
 
 const app = express()
 
@@ -38,6 +40,7 @@ app.route("/users").get( async (req, res) => {
     const user = req.body as User;
     //TODO validate userData
     const newId = await userDatabaseRepository.addUser(user)
+    res.status(201)
     res.json(newId)
 })
 
@@ -67,7 +70,43 @@ app.route("/users/:userId").get(async (req, res) => {
     res.json(result)
 })
 
-//TODO recipe routes
+//recipe routes
+app.route("/recipes").get( async (req, res) => {
+    const recipes = await recipeDatabaseRepository.getAllRecipes();
+    res.json(recipes)
+}).post(async (req, res) => {
+    const recipe = req.body as Recipe;
+    //TODO validate recipeData
+    const newId = await recipeDatabaseRepository.addRecipe(recipe)
+    res.status(201)
+    res.json(newId)
+})
+
+app.route("/recipes/:recipeId").get(async (req, res) => {
+    const recipe = await recipeDatabaseRepository.getRecipe(new ObjectId(req.params.recipeId))
+    if(recipe){
+        console.log("Getting recipe by _id: ");
+        console.log(recipe);
+        res.json(recipe)
+    } else {
+        res.sendStatus(404)
+    }
+}).put(async (req, res) => {
+    console.log("Updating recipe: ")
+    const id = req.body._id;
+    // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
+    const result = await recipeDatabaseRepository.updateRecipe({...req.body, _id: new ObjectId(id)})
+    if (result.modifiedCount === 0) {
+        res.status(404)
+    }
+    res.json(result)
+}).delete(async (req, res) => {
+    const result = await recipeDatabaseRepository.deleteRecipe(new ObjectId(req.params.recipeId))
+    if(result.deletedCount === 0){
+        res.status(404)
+    } 
+    res.json(result)
+})
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

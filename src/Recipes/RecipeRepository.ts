@@ -1,9 +1,10 @@
 import { IdentifiableRecipe, Recipe } from "./Recipe";
 
 class RecipeRepository {
-    jsonServerPath = "http://localhost:3001";
+    backendServerPath = "http://localhost:2704";
+
     async addRecipe(recipe: Recipe){
-        fetch(this.jsonServerPath+'/recipes', {
+        fetch(this.backendServerPath+'/recipes', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -12,7 +13,7 @@ class RecipeRepository {
         })
     }
     async getAllRecipes(){
-        let response = await fetch(this.jsonServerPath+'/recipes', {
+        let response = await fetch(this.backendServerPath+'/recipes', {
             method: 'GET',
         })
         let json: IdentifiableRecipe[] = await response.json()
@@ -20,19 +21,27 @@ class RecipeRepository {
     }
 
     async getRecipe(recipeId: string){
-        let response = await fetch(this.jsonServerPath+'/recipes/'+recipeId, {
+        let response = await fetch(this.backendServerPath+'/recipes/'+recipeId, {
             method: 'GET',
         })
         let json: IdentifiableRecipe = await response.json()
         return json
     }
     async updateRecipe(recipe: IdentifiableRecipe) {
-        fetch(this.jsonServerPath+'/recipes/'+recipe.id, {
+        fetch(this.backendServerPath+'/recipes/'+recipe._id, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(recipe)
+        })
+    }
+    async deleteRecipe(recipe: IdentifiableRecipe) {
+        fetch(this.backendServerPath+'/recipes/'+recipe._id, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            }
         })
     }
 }

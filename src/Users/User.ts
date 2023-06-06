@@ -36,10 +36,10 @@ export class User {
             }
 }
 export class IdentifiableUser extends User {
-    _id: ObjectId; //идентификатор на записа (до 24 символа);
+    _id: string; //идентификатор на записа (до 24 символа);
 
     constructor(
-            _id: ObjectId,
+            _id: string,
             name: string, 
             username: string, 
             password: string, 

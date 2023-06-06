@@ -51,7 +51,7 @@ export function EditRecipeForm() {
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     const updatedRecipe: IdentifiableRecipe = {
-      id: recipe.id,
+      _id: recipe._id,
       ...recipeData,
       author: userId, // User should be redirected if not logged in
       preparationTimeInMinutes: parseInt(recipeData.preparationTimeInMinutes),

@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export class Product {
     name: string
     constructor(name: string) { 
@@ -42,9 +44,9 @@ export class Recipe {
 }
 
 export class IdentifiableRecipe extends Recipe {
-    id: string; //идентификатор на рецептата (до 24 символа);
+    _id: string; //идентификатор на рецептата (до 24 символа);
     constructor(
-        id: string, 
+        _id: string, 
         author: string, 
         name: string, 
         shortDescription: string, 
@@ -67,7 +69,7 @@ export class IdentifiableRecipe extends Recipe {
             tags,
             shareTime,
             modificationTime);
-            this.id = id
+            this._id = _id
     }
 
 }
