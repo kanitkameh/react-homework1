@@ -26,8 +26,10 @@ app.use(function (req, res, next) {
 app.route("/users").get( async (req, res) => {
     const username = req.query.username
     if (username){
-        const users = await userDatabaseRepository.getUserByUsername(username as string);
-        res.json(users)
+        const user = await userDatabaseRepository.getUserByUsername(username as string);
+        console.log("Getting user by username: ");
+        console.log(user);
+        res.json(user)
     } else {
         const users = await userDatabaseRepository.getAllUsers();
         res.json(users)
@@ -42,25 +44,27 @@ app.route("/users").get( async (req, res) => {
 app.route("/users/:userId").get(async (req, res) => {
     const user = await userDatabaseRepository.getUser(new ObjectId(req.params.userId))
     if(user){
+        console.log("Getting user by _id: ");
+        console.log(user);
         res.json(user)
     } else {
         res.sendStatus(404)
     }
 }).put(async (req, res) => {
-    const result = await userDatabaseRepository.updateUser(req.body)
+    console.log("Updating user: ")
+    const id = req.body._id;
+    // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
+    const result = await userDatabaseRepository.updateUser({...req.body, _id: new ObjectId(id)})
     if (result.modifiedCount === 0) {
-        res.sendStatus(404)
-    } else {
-        res.json(result)
+        res.status(404)
     }
     res.json(result)
 }).delete(async (req, res) => {
     const result = await userDatabaseRepository.deleteUser(new ObjectId(req.params.userId))
     if(result.deletedCount === 0){
-        res.sendStatus(404)
-    } else {
-        res.json(result)
-    }
+        res.status(404)
+    } 
+    res.json(result)
 })
 
 //TODO recipe routes

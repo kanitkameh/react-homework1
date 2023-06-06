@@ -36,8 +36,18 @@ class UserRepository {
         let json: IdentifiableUser = await response.json()
         return json
     }
+
+    async deleteUser(user: IdentifiableUser) {
+        return fetch(this.backendServerPath+'/users/'+user._id, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+    }
+
     async updateUser(user: IdentifiableUser) {
-        fetch(this.backendServerPath+'/users/'+user._id, {
+        return fetch(this.backendServerPath+'/users/'+user._id, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",

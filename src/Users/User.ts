@@ -8,7 +8,7 @@ export class User {
     role: Role; //потребителска роля (user или admin);
     photo: URL | undefined; //снимка на потребителя (може да бъде URL, ако липсва се замества с аватара по подразбиране в зависимост от пола);
     description: string; //кратко представяне на потребителя (до 512 символа);
-    accountStatu: AccountStatus; //статус на валидност на акаунта - (active, suspended или deactivated);
+    accountStatus: AccountStatus; //статус на валидност на акаунта - (active, suspended или deactivated);
     registrationTime: Date; //дата и час на регистрация (генерира се автоматично);
     modificatinTime: Date; //дата и час на последна модификация (генерира се автоматично);
     constructor(
@@ -19,7 +19,7 @@ export class User {
             role: Role, 
             photo: URL | undefined, 
             description: string, 
-            accountStatu: AccountStatus, 
+            accountStatus: AccountStatus, 
             registrationTime: Date, 
             modificatinTime: Date) 
             {
@@ -30,7 +30,7 @@ export class User {
                 this.role = role;
                 this.photo = photo;
                 this.description = description;
-                this.accountStatu = accountStatu;
+                this.accountStatus = accountStatus;
                 this.registrationTime = registrationTime;
                 this.modificatinTime = modificatinTime;
             }
@@ -47,7 +47,7 @@ export class IdentifiableUser extends User {
             role: Role, 
             photo: URL | undefined, 
             description: string, 
-            accountStatu: AccountStatus, 
+            accountStatus: AccountStatus, 
             registrationTime: Date, 
             modificatinTime: Date) 
             {
@@ -59,7 +59,7 @@ export class IdentifiableUser extends User {
                 role,
                 photo,
                 description,
-                accountStatu,
+                accountStatus,
                 registrationTime,
                 modificatinTime);
 

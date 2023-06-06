@@ -14,14 +14,14 @@ export function EditUserComponent() {
   const [photo, setPhoto] = useState(user.photo?.toString() ?? "");
   const [description, setDescription] = useState(user.description);
 
-  useEffect(() => {
-    setUsername(user.username)
-    setName(user.name)
-    setGender(user.gender)
-    setPassword(user.password)
-    setPhoto(user.photo?.toString() ??  "")
-    setDescription(user.description)
-  });
+  // useEffect(() => {
+  //   setUsername(user.username)
+  //   setName(user.name)
+  //   setGender(user.gender)
+  //   setPassword(user.password)
+  //   setPhoto(user.photo?.toString() ??  "")
+  //   setDescription(user.description)
+  // });
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();

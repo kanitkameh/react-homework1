@@ -45,7 +45,7 @@ class UserDatabaseRepository {
         return user;
     }
     async updateUser(user: IdentifiableUser) {
-        const result = await db.collection(collection).updateOne({ _id: user._id }, { $set: user});
+        const result = await db.collection(collection).replaceOne({ _id: user._id }, user);
         return result;
     }
 
