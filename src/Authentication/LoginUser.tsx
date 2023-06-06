@@ -7,7 +7,7 @@ export function LoginUser() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const handleSubmit = (event: FormEvent) => {
-        login(username,password);
+        login(username,password)//.then(x => { });
         navigate("/");
     };
     return (
