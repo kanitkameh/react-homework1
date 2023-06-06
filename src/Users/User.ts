@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 export class User {
     name: string; //име на потребителя;реализоирано
     username: string; //login име (username - до 15 символа - word characters);
@@ -34,10 +36,10 @@ export class User {
             }
 }
 export class IdentifiableUser extends User {
-    id: string; //идентификатор на записа (до 24 символа);
+    _id: ObjectId; //идентификатор на записа (до 24 символа);
 
     constructor(
-            id: string,
+            _id: ObjectId,
             name: string, 
             username: string, 
             password: string, 
@@ -61,7 +63,7 @@ export class IdentifiableUser extends User {
                 registrationTime,
                 modificatinTime);
 
-                this.id = id;
+                this._id = _id;
             }
 }
 export enum AccountStatus {

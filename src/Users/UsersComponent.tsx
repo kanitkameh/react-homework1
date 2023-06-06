@@ -13,7 +13,7 @@ export function UsersComponent() {
     }, []);
     return (<div>
         {users?.map(
-            user => (<div>{user.username} <img className='user-image' src={user.photo?.toString()} alt='profile picture'></img> <Link to={""+user.id}>Edit</Link>
+            user => (<div>{user.username} <img className='user-image' src={user.photo?.toString()} alt='profile picture'></img> <Link to={""+user._id}>Edit</Link>
             <hr></hr>
             </div>)
         )}

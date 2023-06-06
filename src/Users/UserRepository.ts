@@ -1,9 +1,10 @@
 import { IdentifiableUser, User } from "./User";
 
 class UserRepository {
-    jsonServerPath = "http://localhost:3001";
+    backendServerPath = "http://localhost:2704";
+
     async addUser(user: User){
-        fetch(this.jsonServerPath+'/users', {
+        fetch(this.backendServerPath+'/users', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -12,7 +13,7 @@ class UserRepository {
         })
     }
     async getAllUsers(){
-        let response = await fetch(this.jsonServerPath+'/users', {
+        let response = await fetch(this.backendServerPath+'/users', {
             method: 'GET',
         })
         let json: IdentifiableUser[] = await response.json()
@@ -20,7 +21,7 @@ class UserRepository {
     }
 
     async getUserByUsername(username: string) {
-        let response = await fetch(this.jsonServerPath+'/users?username='+username, {
+        let response = await fetch(this.backendServerPath+'/users?username='+username, {
             method: 'GET',
         })
         let json: IdentifiableUser = await response.json()
@@ -29,14 +30,14 @@ class UserRepository {
 
     async getUser(userId: string){
         console.log("getting user "+ userId)
-        let response = await fetch(this.jsonServerPath+'/users/'+userId, {
+        let response = await fetch(this.backendServerPath+'/users/'+userId, {
             method: 'GET',
         })
         let json: IdentifiableUser = await response.json()
         return json
     }
     async updateUser(user: IdentifiableUser) {
-        fetch(this.jsonServerPath+'/users/'+user.id, {
+        fetch(this.backendServerPath+'/users/'+user._id, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",

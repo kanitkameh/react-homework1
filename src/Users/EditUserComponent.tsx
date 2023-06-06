@@ -26,7 +26,7 @@ export function EditUserComponent() {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     let updatedUser: IdentifiableUser = new IdentifiableUser(
-            user.id,
+            user._id,
             name, //име на потребителя;реализоирано
             username, //login име (username - до 15 символа - word characters);
             password, //парола (поне 8 символа, поне една цифра и знак различен от буква и цифра);

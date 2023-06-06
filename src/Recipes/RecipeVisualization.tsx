@@ -26,6 +26,7 @@ export function RecipeVisualization({ recipe }: RecipeProps) {
       <p>Modification Time: {recipe.modificationTime.toString()}</p>
 
       <a href={"/recipes/"+recipe.id}>Edit</a>
+      {/* <Link to={recipe.id}>Edit</Link> */}
         <hr></hr>
     </div>
   );
