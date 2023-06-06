@@ -1,9 +1,9 @@
 import express from 'express';
 import { userDatabaseRepository } from './Users/UserDatabaseRepository';
-import { User } from './Users/User';
+import { User, validate_user } from './Users/User';
 import { ObjectId } from 'mongodb';
 import { recipeDatabaseRepository } from './Recipes/RecipeDatabaseRepository';
-import { Recipe } from './Recipes/Recipe';
+import { Recipe, validateRecipe } from './Recipes/Recipe';
 
 const app = express()
 
@@ -38,10 +38,15 @@ app.route("/users").get( async (req, res) => {
     }
 }).post(async (req, res) => {
     const user = req.body as User;
-    //TODO validate userData
-    const newId = await userDatabaseRepository.addUser(user)
-    res.status(201)
-    res.json(newId)
+    const problems = validate_user(user)
+    if(problems.length === 0){
+        const newId = await userDatabaseRepository.addUser(user)
+        res.status(201)
+        res.json(newId)
+    } else {
+        res.status(400)
+        res.json(problems)
+    }
 })
 
 app.route("/users/:userId").get(async (req, res) => {
@@ -55,13 +60,19 @@ app.route("/users/:userId").get(async (req, res) => {
     }
 }).put(async (req, res) => {
     console.log("Updating user: ")
-    const id = req.body._id;
-    // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
-    const result = await userDatabaseRepository.updateUser({...req.body, _id: new ObjectId(id)})
-    if (result.modifiedCount === 0) {
-        res.status(404)
+    const problems = validate_user(req.body)
+    if(problems.length === 0){
+        const id = req.body._id;
+        // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
+        const result = await userDatabaseRepository.updateUser({ ...req.body, _id: new ObjectId(id) })
+        if (result.modifiedCount === 0) {
+            res.status(404)
+        }
+        res.json(result)
+    } else {
+        res.status(400)
+        res.json(problems)
     }
-    res.json(result)
 }).delete(async (req, res) => {
     const result = await userDatabaseRepository.deleteUser(new ObjectId(req.params.userId))
     if(result.deletedCount === 0){
@@ -75,11 +86,17 @@ app.route("/recipes").get( async (req, res) => {
     const recipes = await recipeDatabaseRepository.getAllRecipes();
     res.json(recipes)
 }).post(async (req, res) => {
-    const recipe = req.body as Recipe;
-    //TODO validate recipeData
-    const newId = await recipeDatabaseRepository.addRecipe(recipe)
-    res.status(201)
-    res.json(newId)
+    const recipe = req.body;
+    let problems = validateRecipe(recipe)
+    if(problems.length === 0){
+        const newId = await recipeDatabaseRepository.addRecipe(recipe as Recipe)
+        res.status(201)
+        res.json(newId)
+    } else{
+        res.status(400)
+        res.json(problems)
+    }
+
 })
 
 app.route("/recipes/:recipeId").get(async (req, res) => {
@@ -93,13 +110,19 @@ app.route("/recipes/:recipeId").get(async (req, res) => {
     }
 }).put(async (req, res) => {
     console.log("Updating recipe: ")
-    const id = req.body._id;
-    // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
-    const result = await recipeDatabaseRepository.updateRecipe({...req.body, _id: new ObjectId(id)})
-    if (result.modifiedCount === 0) {
-        res.status(404)
+    let problems = validateRecipe(req.body)
+    if(problems.length === 0){
+        const id = req.body._id;
+        // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
+        const result = await recipeDatabaseRepository.updateRecipe({ ...req.body, _id: new ObjectId(id) })
+        if (result.modifiedCount === 0) {
+            res.status(404)
+        }
+        res.json(result)
+    } else {
+        res.status(400)
+        res.json(problems)
     }
-    res.json(result)
 }).delete(async (req, res) => {
     const result = await recipeDatabaseRepository.deleteRecipe(new ObjectId(req.params.recipeId))
     if(result.deletedCount === 0){

@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { RecipeVisualization } from "./RecipeVisualization";
 
 export class Product {
     name: string
@@ -72,4 +73,44 @@ export class IdentifiableRecipe extends Recipe {
             this._id = _id
     }
 
+}
+
+// TODO add more checks?
+export function validateRecipe(recipe: any){
+    let isRecipeProblems = isRecipe(recipe)
+    if(isRecipeProblems.length === 0) {
+        return validateRecipeFields(recipe as Recipe);
+    }
+    return isRecipeProblems
+}
+
+function validateRecipeFields(recipe: Recipe){
+    let problems = []
+    if(recipe.name.length > 80){
+        problems.push("recipe name too long")
+    }
+    if(recipe.author.length > 24){
+        problems.push("authorId too long")
+    }
+    return problems
+}
+
+function isRecipe(recipe: any){
+    let problems = []
+    if(!(recipe.author && typeof(recipe.author) == 'string')){
+            problems.push("author isn't a string")
+    }
+
+    if(!(recipe.name && typeof(recipe.name) == 'string')){
+            problems.push("name isn't a string")
+    }
+
+    if(!(recipe.shortDescription && typeof(recipe.shortDescription) == 'string')){
+            problems.push("shortDescription isn't a string")
+    }
+
+    if(!(recipe.preparationTimeInMinutes && typeof(recipe.preparationTimeInMinutes) == 'number')){
+            problems.push("preparationTimeInMinutes isn't a number")
+    }
+    return problems
 }

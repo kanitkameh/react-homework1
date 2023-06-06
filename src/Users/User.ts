@@ -73,5 +73,42 @@ export enum Gender {
     Male = "Male", Female = "Female"
 }
 export enum Role {
-    Admin, User
+    Admin = "Admin", User = "User"
+}
+
+export function validate_user(user: any){
+    let isUserProblems = isUser( user )
+    if(isUserProblems.length === 0){
+        return validateUserFields(user as User)
+    }
+    return isUserProblems;
+}
+
+export function validateUserFields(user: User){
+    let problems = []
+    if(user.username.length > 15){
+        problems.push("username too long")
+    }
+
+    if(user.password.length < 8){
+        problems.push("password too short")
+    }
+
+
+    if(user.description.length > 512){
+        problems.push("too long user description")
+    }
+    return problems;
+}
+
+function isUser(user: any){
+    let problems = []
+    if(!(user.gender === Gender.Female || user.gender === Gender.Male)){
+        problems.push("invalid gender")
+    }
+
+    if(!(user.role === Role.Admin || user.role === Role.User)){
+        problems.push("invalid role")
+    }
+    return problems;
 }
