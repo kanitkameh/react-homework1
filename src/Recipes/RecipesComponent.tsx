@@ -14,10 +14,29 @@ export function RecipesComponent() {
     }, []);
     return (<div>
         <div>Sort by 
-            <div onClick={() => setRecipes(recipes?.sort((a, b) => a.shareTime>b.shareTime?1:-1))}>Share Time</div>
-            <div onClick={() => setRecipes(recipes?.sort((a, b) => a.shareTime<b.shareTime?1:-1))}>Share Time Descending</div>
+            <button onClick={() => {
+                setRecipes(oldRecipes => [...oldRecipes!].sort((a, b) => a.shareTime>b.shareTime?1:-1))
+                }}>Share Time</button>
+            <button onClick={() => {
+                setRecipes(oldRecipes => [...oldRecipes!].sort((a, b) => a.shareTime<b.shareTime?1:-1))
+                }}>Share Time Descending</button>
         </div>
-        <div>Sort by <span onClick={() => setRecipes(recipes?.sort((a, b) => a.modificationTime>b.modificationTime?1:-1))}>Modification Time</span></div>
+        <div>Sort by 
+            <button onClick={() => {
+                setRecipes(oldRecipes => [...oldRecipes!].sort((a, b) => a.preparationTimeInMinutes>b.preparationTimeInMinutes?1:-1))
+                }}>Preparation Time</button>
+            <button onClick={() => {
+                setRecipes(oldRecipes => [...oldRecipes!].sort((a, b) => a.preparationTimeInMinutes<b.preparationTimeInMinutes?1:-1))
+                }}>Preparation Time Descending</button>
+        </div>
+        <div>Sort by 
+            <button onClick={() => {
+                setRecipes(oldRecipes => [...oldRecipes!].sort((a, b) => a.modificationTime>b.modificationTime?1:-1))
+                }}>Modification Time</button>
+            <button onClick={() => {
+                setRecipes(oldRecipes => [...oldRecipes!].sort((a, b) => a.modificationTime<b.modificationTime?1:-1))
+                }}>Modification Time Descending</button>
+        </div>
 
         {recipes?.map( recipe => 
             <RecipeVisualization recipe={recipe}></RecipeVisualization>
