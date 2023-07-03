@@ -40,7 +40,7 @@ export class IdentifiableEvent extends Event {
         organizerId: string,
         description: string,
         ticketPrice: number,
-        reviewIds: string[]
+        reviewIds: Review[]
     ){
         super(name,venue,date,organizerId,description,ticketPrice,reviewIds)
         this._id = _id

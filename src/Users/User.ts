@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import * as yup from 'yup';
 
 export class User {
     name: string; //име на потребителя;реализоирано
@@ -76,39 +76,29 @@ export enum Role {
     Admin = "Admin", User = "User"
 }
 
-export function validate_user(user: any){
-    let isUserProblems = isUser( user )
-    if(isUserProblems.length === 0){
-        return validateUserFields(user as User)
-    }
-    return isUserProblems;
-}
 
-export function validateUserFields(user: User){
-    let problems = []
-    if(user.username.length > 15){
-        problems.push("username too long")
-    }
+const userSchema = yup.object().shape({
+  name: yup.string().required(),
+  username: yup
+    .string()
+    .max(15)
+    .matches(/^\w+$/)
+    .required(),
+  password: yup
+    .string()
+    .min(8)
+    .matches(/^(?=.*[0-9])(?=.*[^\w\s]).*$/)
+    .required(),
+  gender: yup.string().required(),
+  role: yup.string().oneOf(['user', 'admin']).required(),
+  photo: yup.string().url().notRequired(),
+  description: yup.string().max(512).required(),
+  accountStatus: yup
+    .string()
+    .oneOf(['active', 'suspended', 'deactivated'])
+    .required(),
+  registrationTime: yup.date().required(),
+  modificationTime: yup.date().required(),
+});
 
-    if(user.password.length < 8){
-        problems.push("password too short")
-    }
-
-
-    if(user.description.length > 512){
-        problems.push("too long user description")
-    }
-    return problems;
-}
-
-function isUser(user: any){
-    let problems = []
-    if(!(user.gender === Gender.Female || user.gender === Gender.Male)){
-        problems.push("invalid gender")
-    }
-
-    if(!(user.role === Role.Admin || user.role === Role.User)){
-        problems.push("invalid role")
-    }
-    return problems;
-}
+export default userSchema;
