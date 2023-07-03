@@ -1,5 +1,19 @@
 import * as yup from 'yup';
 
+// Used for creation of users
+export class UserDTO {
+    constructor(
+            public name: string, 
+            public username: string, 
+            public password: string, 
+            public gender: Gender, 
+            public role: Role, 
+            public photo: URL | undefined, 
+            public description: string, 
+            public accountStatus: AccountStatus
+            ){}
+}
+
 export class User {
     name: string; //име на потребителя;реализоирано
     username: string; //login име (username - до 15 символа - word characters);
@@ -76,8 +90,7 @@ export enum Role {
     Admin = "Admin", User = "User"
 }
 
-
-const userSchema = yup.object().shape({
+export const userSchema = yup.object().shape({
   name: yup.string().required(),
   username: yup
     .string()
@@ -101,4 +114,24 @@ const userSchema = yup.object().shape({
   modificationTime: yup.date().required(),
 });
 
-export default userSchema;
+export const userDtoSchema = yup.object().shape({
+  name: yup.string().required(),
+  username: yup
+    .string()
+    .max(15)
+    .matches(/^\w+$/)
+    .required(),
+  password: yup
+    .string()
+    .min(8)
+    .matches(/^(?=.*[0-9])(?=.*[^\w\s]).*$/)
+    .required(),
+  gender: yup.string().required(),
+  role: yup.string().oneOf(['user', 'admin']).required(),
+  photo: yup.string().url().notRequired(),
+  description: yup.string().max(512).required(),
+  accountStatus: yup
+    .string()
+    .oneOf(['active', 'suspended', 'deactivated'])
+    .required(),
+});

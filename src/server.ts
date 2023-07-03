@@ -1,11 +1,10 @@
 import express, { NextFunction } from 'express';
-import { userDatabaseRepository } from './Users/UserDatabaseRepository';
-import userSchema, { User } from './Users/User';
+import { User } from './Users/User';
 import { ObjectId } from 'mongodb';
 import { recipeDatabaseRepository } from './Recipes/RecipeDatabaseRepository';
 import { Recipe, validateRecipe } from './Recipes/Recipe';
-import { ObjectSchema, ValidationError } from 'yup';
 import { authenticateUser, authenticationRouter, CustomSession } from './Backend/Authentication';
+import { userRouter } from './Backend/UserRoutes';
 
 const app = express()
 
@@ -25,71 +24,6 @@ app.use(function (req, res, next) {
     res.setHeader('Cache-Control', 'no-cache');
     next();
 });
-
-const bodySchemaValidationMiddleware = (schema: ObjectSchema<any>) => {
-  return async (req: any , res: any , next: NextFunction) => {
-    try {
-      const userData = req.body;
-      await schema.validate(userData, { abortEarly: false });
-      next();
-    } catch (error) {
-      const validationErrors: { [key: string]: string } = {};
-      if (error instanceof ValidationError) {
-        error.inner.forEach((err) => {
-          validationErrors[err.path ?? 'unknown'] = err.message;
-        });
-      }
-      res.status(400).json({ errors: validationErrors });
-    }
-  };
-};
-
-// User routes
-const userRouter = express.Router()
-
-userRouter.route("/users").get( async (req, res) => {
-    const username = req.query.username
-    if (username){
-        const user = await userDatabaseRepository.getUserByUsername(username as string);
-        console.log("Getting user by username: ");
-        console.log(user);
-        res.json(user)
-    } else {
-        const users = await userDatabaseRepository.getAllUsers();
-        res.json(users)
-    }
-}).post(bodySchemaValidationMiddleware(userSchema), async (req, res) => {
-    const user = req.body as User;
-    const newId = await userDatabaseRepository.addUser(user)
-    res.status(201)
-    res.json(newId)
-})
-
-userRouter.route("/users/:userId").get(async (req, res) => {
-    const user = await userDatabaseRepository.getUser(new ObjectId(req.params.userId))
-    if(user){
-        console.log("Getting user by _id: ");
-        console.log(user);
-        res.json(user)
-    } else {
-        res.sendStatus(404)
-    }
-}).put(bodySchemaValidationMiddleware(userSchema), async (req, res) => {
-    console.log("Updating user: ")
-    const id = req.body._id;
-    // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
-    const result = await userDatabaseRepository.updateUser({ ...req.body, _id: new ObjectId(id) })
-    if (result.modifiedCount === 0) {
-        res.status(404)
-    }
-    res.json(result)
-}).delete(async (req, res) => {
-    const result = await userDatabaseRepository.deleteUser(new ObjectId(req.params.userId))
-    if(result.deletedCount === 0){
-        res.status(404)
-    } 
-    res.json(result)
-})
 
 //recipe routes
 app.route("/recipes").get( async (req, res) => {
@@ -144,10 +78,6 @@ app.route("/recipes/:recipeId").get(async (req, res) => {
         res.status(404)
     } 
     res.json(result)
-})
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
 })
 
 app.use('/', authenticationRouter)

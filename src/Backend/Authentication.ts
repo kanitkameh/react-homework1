@@ -1,10 +1,6 @@
 import express, { NextFunction } from 'express';
 import { userDatabaseRepository } from '../Users/UserDatabaseRepository';
-import userSchema, { User } from '../Users/User';
-import { ObjectId } from 'mongodb';
-import { recipeDatabaseRepository } from '../Recipes/RecipeDatabaseRepository';
-import { Recipe, validateRecipe } from '../Recipes/Recipe';
-import { ObjectSchema, ValidationError } from 'yup';
+import { User } from '../Users/User';
 import session, { Session } from 'express-session';
 
 export interface CustomSession extends Session {
