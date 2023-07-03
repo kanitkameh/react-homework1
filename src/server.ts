@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 import { recipeDatabaseRepository } from './Recipes/RecipeDatabaseRepository';
 import { Recipe, validateRecipe } from './Recipes/Recipe';
 import { ObjectSchema, ValidationError } from 'yup';
-import session, { Session } from 'express-session';
+import { authenticateUser, authenticationRouter, CustomSession } from './Backend/Authentication';
 
 const app = express()
 
@@ -45,59 +45,9 @@ const bodySchemaValidationMiddleware = (schema: ObjectSchema<any>) => {
 };
 
 // User routes
-interface CustomSession extends Session {
-  user?: User;
-}
-// Configure session middleware
-app.use(
-  session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: false,
-        secure: false  //TODO only for debugging purposes
-    }
-  })
-);
+const userRouter = express.Router()
 
-// Custom middleware to check if the user is authenticated
-const authenticateUser = (req: any, res: any, next: NextFunction) => {
-    if (req.session && req.session.user) {
-        // User is authenticated, proceed to the next middleware or route
-        next();
-    } else {
-        // User is not authenticated, redirect to the login page or send an error response
-        res.status(401).json({ error: 'Unauthorized' });
-    }
-};
-
-// Example login endpoint
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-  
-    const user = await userDatabaseRepository.getUserByUsername(username as string);
-    const isValidCredentials = user?.username === username && user?.password === password
-  
-    if (isValidCredentials) {
-        const session = req.session as CustomSession;
-        // Set the authenticated user in the session
-        session.user = user!;
-      res.json({ message: 'Login successful' });
-    } else {
-      res.status(401).json({ error: 'Invalid credentials' });
-    }
-  });
-
-// Example logout endpoint
-app.post('/logout', authenticateUser, (req, res) => {
-  // Destroy the session and logout the user
-  req.session.destroy(() => {
-    res.json({ message: 'Logout successful' });
-  });
-});
-
-app.route("/users").get( async (req, res) => {
+userRouter.route("/users").get( async (req, res) => {
     const username = req.query.username
     if (username){
         const user = await userDatabaseRepository.getUserByUsername(username as string);
@@ -115,7 +65,7 @@ app.route("/users").get( async (req, res) => {
     res.json(newId)
 })
 
-app.route("/users/:userId").get(async (req, res) => {
+userRouter.route("/users/:userId").get(async (req, res) => {
     const user = await userDatabaseRepository.getUser(new ObjectId(req.params.userId))
     if(user){
         console.log("Getting user by _id: ");
@@ -199,6 +149,9 @@ app.route("/recipes/:recipeId").get(async (req, res) => {
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+
+app.use('/', authenticationRouter)
+app.use('/', userRouter)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
