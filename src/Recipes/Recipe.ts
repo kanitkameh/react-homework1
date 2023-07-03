@@ -1,6 +1,3 @@
-import { ObjectId } from "mongodb";
-import { RecipeVisualization } from "./RecipeVisualization";
-
 export class Product {
     name: string
     constructor(name: string) { 
