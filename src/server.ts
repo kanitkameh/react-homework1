@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb';
 import { recipeDatabaseRepository } from './Recipes/RecipeDatabaseRepository';
 import { Recipe, validateRecipe } from './Recipes/Recipe';
 import { ObjectSchema, ValidationError } from 'yup';
+import session, { Session } from 'express-session';
 
 const app = express()
 
@@ -44,6 +45,58 @@ const bodySchemaValidationMiddleware = (schema: ObjectSchema<any>) => {
 };
 
 // User routes
+interface CustomSession extends Session {
+  user?: User;
+}
+// Configure session middleware
+app.use(
+  session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: false,
+        secure: false  //TODO only for debugging purposes
+    }
+  })
+);
+
+// Custom middleware to check if the user is authenticated
+const authenticateUser = (req: any, res: any, next: NextFunction) => {
+    if (req.session && req.session.user) {
+        // User is authenticated, proceed to the next middleware or route
+        next();
+    } else {
+        // User is not authenticated, redirect to the login page or send an error response
+        res.status(401).json({ error: 'Unauthorized' });
+    }
+};
+
+// Example login endpoint
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+  
+    const user = await userDatabaseRepository.getUserByUsername(username as string);
+    const isValidCredentials = user?.username === username && user?.password === password
+  
+    if (isValidCredentials) {
+        const session = req.session as CustomSession;
+        // Set the authenticated user in the session
+        session.user = user!;
+      res.json({ message: 'Login successful' });
+    } else {
+      res.status(401).json({ error: 'Invalid credentials' });
+    }
+  });
+
+// Example logout endpoint
+app.post('/logout', authenticateUser, (req, res) => {
+  // Destroy the session and logout the user
+  req.session.destroy(() => {
+    res.json({ message: 'Logout successful' });
+  });
+});
+
 app.route("/users").get( async (req, res) => {
     const username = req.query.username
     if (username){
@@ -92,7 +145,12 @@ app.route("/users/:userId").get(async (req, res) => {
 app.route("/recipes").get( async (req, res) => {
     const recipes = await recipeDatabaseRepository.getAllRecipes();
     res.json(recipes)
-}).post(async (req, res) => {
+}).post(authenticateUser,async (req, res) => {
+    // Access the authenticated user from the session
+    const session = req.session as CustomSession
+    const user: User = session.user!; //should be fine since we 
+    console.log("Authenticated "+ user.username + " is adding recipe")
+
     const recipe = req.body;
     let problems = validateRecipe(recipe)
     if(problems.length === 0){
