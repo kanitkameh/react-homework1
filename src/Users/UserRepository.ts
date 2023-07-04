@@ -42,7 +42,9 @@ class UserRepository {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: "include",
+            mode: "cors",
         })
     }
 
@@ -52,6 +54,8 @@ class UserRepository {
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "include",
+            mode: "cors",
             body: JSON.stringify(user)
         })
     }
