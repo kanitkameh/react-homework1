@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Outlet, useLoaderData } from 'react-router-dom';
 import { logout } from './Authentication/AuthenticationService';
 import './menu.css'
 
 export function Menu() {
     const loggedUserId = useLoaderData()
+    const [userLoggedIn, setUserLoggedIn] = useState(false)
     if (loggedUserId == null) {
         return (<div>
             <div className='navbar'>
                 <span className='menu-item'><Link to='/login'>Login</Link></span>
                 <span className='menu-item'><Link to='/register'>Register</Link></span>
             </div>
-            <Outlet />
+            <Outlet context={{userLoggedIn, setUserLoggedIn}}/>
         </div>)
     } else {
         return (<div>

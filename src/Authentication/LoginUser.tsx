@@ -1,15 +1,19 @@
 import { FormEvent, useState } from "react";
 import { login } from "./AuthenticationService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 export function LoginUser() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const handleSubmit = (event: FormEvent) => {
-        login(username,password)//.then(x => { });
-        navigate("/");
+        event.preventDefault()
+        login(username, password).then(res => { 
+            // navigate("/") 
+            document.location.href = "/"
+        });
     };
+    // const loggedUserId: any = useOutletContext()
     return (
         <form onSubmit={handleSubmit}>
             <label htmlFor="username">Username:</label>

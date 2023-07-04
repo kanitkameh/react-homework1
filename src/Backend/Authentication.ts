@@ -23,6 +23,8 @@ authenticationRouter.use(
 
 // Custom middleware to check if the user is authenticated
 export const authenticateUser = (req: any, res: any, next: NextFunction) => {
+    console.log((req.session))
+    console.log((req.session.user))
     if (req.session && req.session.user) {
         // User is authenticated, proceed to the next middleware or route
         next();
@@ -41,16 +43,18 @@ authenticationRouter.post('/login', async (req, res) => {
     if (isValidCredentials) {
         const session = req.session as CustomSession;
         session.user = user!;
-      res.json({ message: 'Login successful' });
+
+        res.location("localhost:3000/")
+        res.json({ message: 'Login successful' });
     } else {
       res.status(401).json({ error: 'Invalid credentials' });
     }
-    res.location("/")
 });
 
 authenticationRouter.post('/logout', authenticateUser, (req, res) => {
   req.session.destroy(() => {
-    res.json({ message: 'Logout successful' });
+      res.clearCookie("connect.sid")
+      res.location("/")
+      res.json({ message: 'Logout successful' });
   });
-  res.location("/")
 });

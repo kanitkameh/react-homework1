@@ -18,12 +18,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
     // Set permissive CORS header - this allows this server to be used only as
     // an API server in conjunction with something like webpack-dev-server.
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    // res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization, Cookie, Host, Origin');
     res.setHeader(`Access-Control-Allow-Methods`, `GET, POST, PUT, DELETE, OPTIONS`);
-    res.setHeader('Access-Control-Max-Age', 3600); // 1 hour
+    // res.setHeader('Access-Control-Max-Age', 3600); // 1 hour
     // Disable caching so we'll always get the latest posts.
-    res.setHeader('Cache-Control', 'no-cache');
+    // res.setHeader('Cache-Control', 'no-cache');
     next();
 });
 
@@ -31,7 +32,7 @@ app.use(function (req, res, next) {
 app.route("/recipes").get( async (req, res) => {
     const recipes = await recipeDatabaseRepository.getAllRecipes();
     res.json(recipes)
-}).post(authenticateUser,async (req, res) => {
+}).post(async (req, res) => {
     // Access the authenticated user from the session
     const session = req.session as CustomSession
     const user: User = session.user!; //should be fine since we 
