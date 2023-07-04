@@ -1,17 +1,19 @@
 import express, { Request, Response } from 'express';
-import { IdentifiableEvent, eventDtoSchema } from '../Events/Event';
+import { Event, eventDtoSchema } from '../Events/Event';
 import { Review } from '../Events/Review';
 import { bodySchemaValidationMiddleware } from './SchemaValidation';
 import { eventDatabaseRepository } from '../Events/EventDatabaseRepository';
 import { ObjectId } from 'mongodb';
 import { CustomSession, authenticateUser } from './Authentication';
 import { IdentifiableUser } from '../Users/User';
+import { ticketDatabaseRepository } from '../Ticket/TicketDatabaseRepository';
+import { Ticket } from '../Ticket/Ticket';
 
 export const eventRouter = express.Router();
 eventRouter.use(express.json());
 
 // Helper function to generate a unique ID
-function generateUniqueId(): string {
+function generateUniqueBarcode(): string {
     // TODO: Implement your unique ID generation logic here
     // Example implementation using a random number
     return Math.random().toString(36).substr(2, 9);
@@ -47,8 +49,7 @@ eventRouter.post('/events', authenticateUser, bodySchemaValidationMiddleware(eve
         ticketPrice,
     } = req.body;
 
-    const event = new IdentifiableEvent(
-        generateUniqueId(),
+    const event = new Event(
         name,
         venue,
         new Date(date),
@@ -135,4 +136,37 @@ eventRouter.get('/events/:id', async (req: Request, res: Response) => {
 eventRouter.get('/events', async (req: Request, res: Response) => {
     const events = await eventDatabaseRepository.getAllEvents();
     res.status(200).json(events);
+});
+
+
+eventRouter.post('/events/:id/review', authenticateUser, async (req: Request, res: Response) => {
+    const eventId = req.params.id;
+
+    const event = await eventDatabaseRepository.getEvent(new ObjectId(eventId));
+
+    if (event) {
+        //TODO
+        res.status(200).json({ message: 'not implemented yet' });
+    } else {
+        res.status(404).json({ error: 'Event not found' });
+    }
+});
+
+eventRouter.post('/events/:id/ticket-purchase', authenticateUser, async (req: Request, res: Response) => {
+    const session = req.session as CustomSession
+    const user: IdentifiableUser = session.user!
+
+    const eventId = req.params.id;
+
+    const event = await eventDatabaseRepository.getEvent(new ObjectId(eventId));
+
+    //TODO idea: maybe add user balance and substract when purchasing
+    const ticket = new Ticket(user._id, eventId, generateUniqueBarcode())
+    const result = await ticketDatabaseRepository.addTicket(ticket)
+
+    if (result) {
+        res.status(200).json({ message: 'Ticket purchased' });
+    } else {
+        res.status(404).json({ error: 'Event not found' });
+    }
 });
