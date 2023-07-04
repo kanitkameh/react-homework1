@@ -9,7 +9,9 @@ class TicketsRepository {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: "include",
+            mode: "cors",
         })
     }
     async getMyTickets(){

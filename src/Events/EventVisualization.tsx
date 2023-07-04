@@ -3,6 +3,8 @@ import { Event, IdentifiableEvent } from './Event';
 import './EventComponent.css';
 import { ticketsRepository } from '../Ticket/TicketsRepository';
 import { userRepository } from '../Users/UserRepository';
+import { RequireAuthentication } from '../Authentication/RequireAuthentication';
+import { getLoginStatus } from '../Authentication/AuthenticationService';
 
 interface EventProps {
   event: IdentifiableEvent;
@@ -34,11 +36,13 @@ export const EventVisualization: React.FC<EventProps> = ({ event }) => {
         </div>
       )}
       {event.photo && <img src={event.photo.toString()} alt="Event" />}
-      <div className="button-group">
-        <button className="purchase-button" onClick={() => ticketsRepository.purchaseTicket(event._id)}>Purchase Ticket</button>
-        <button className="Leave review">Review</button>
-        { (event.organizerId == userId) && <button className="edit-button">Edit</button>}
-      </div>
+      { getLoginStatus() != null &&
+        <div className="button-group">
+          <button className="purchase-button" onClick={() => ticketsRepository.purchaseTicket(event._id)}>Purchase Ticket</button>
+          <button className="leave-review">Review</button>
+          { (event.organizerId == userId) && <button className="edit-button">Edit</button>}
+        </div>
+       }
     </div>
   );
 };

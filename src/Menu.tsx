@@ -11,6 +11,7 @@ export function Menu() {
             <div className='navbar'>
                 <span className='menu-item'><Link to='/login'>Login</Link></span>
                 <span className='menu-item'><Link to='/register'>Register</Link></span>
+                <span className='menu-item'><Link to='/events'>Events</Link></span>
             </div>
             <Outlet context={{userLoggedIn, setUserLoggedIn}}/>
         </div>)
