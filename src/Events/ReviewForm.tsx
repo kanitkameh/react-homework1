@@ -1,14 +1,22 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { ReviewDTO } from './Review';
 import { useParams } from 'react-router-dom';
 import { eventRepository } from './EventRepository';
+import { userRepository } from '../Users/UserRepository';
 
 interface ReviewFormProps {
   onSubmit: (review: ReviewDTO) => void;
 }
 
-export const ReviewForm  = () => {
-let { eventId } = useParams();
+export const ReviewForm = () => {
+  const [currentUserId, setCurrentUserId] = useState("")
+  useEffect(() => {
+    userRepository.getCurrentUser().then(user => {
+      setCurrentUserId(user._id)
+      setReviewData((oldData) =>  ({...oldData, authorId: user._id}))
+    })
+  }, []);
+  let { eventId } = useParams();
   const [reviewData, setReviewData] = useState<ReviewDTO>({
     authorId: '',
     stars: 0,
@@ -26,7 +34,7 @@ let { eventId } = useParams();
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     //TODO handle the empty string case properly
-    eventRepository.reviewEvent(eventId??"", reviewData)
+    eventRepository.reviewEvent(eventId ?? "", reviewData)
     // Clear the form after submission
     setReviewData({
       authorId: '',
@@ -37,8 +45,6 @@ let { eventId } = useParams();
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="authorId">Author ID:</label>
-      <input type="text" id="authorId" name="authorId" value={reviewData.authorId} onChange={handleInputChange} required />
 
       <label htmlFor="stars">Stars:</label>
       <input type="number" id="stars" name="stars" value={reviewData.stars.toString()} onChange={handleInputChange} required />

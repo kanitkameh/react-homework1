@@ -14,6 +14,7 @@ import { AddEventForm } from './Events/AddEvent';
 import { EventsComponent } from './Events/EventsComponent';
 import { TicketsComponent } from './Ticket/TicketsComponent';
 import path from 'path';
+import { ReviewForm } from './Events/ReviewForm';
 
 
 const router = createBrowserRouter([
@@ -53,7 +54,8 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: ":eventId",
-                        children: [{
+                        children: [
+                            {
                                 path: "edit",
                                 element: 
                                 <RequireAuthentication>
@@ -66,7 +68,7 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: "leave-review",
-                                element: <div>rate</div>
+                                element: <ReviewForm/>
                             },
                         ]
                     }
