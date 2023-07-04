@@ -45,10 +45,12 @@ authenticationRouter.post('/login', async (req, res) => {
     } else {
       res.status(401).json({ error: 'Invalid credentials' });
     }
-  });
+    res.location("/")
+});
 
 authenticationRouter.post('/logout', authenticateUser, (req, res) => {
   req.session.destroy(() => {
     res.json({ message: 'Logout successful' });
   });
+  res.location("/")
 });
