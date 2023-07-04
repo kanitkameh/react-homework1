@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 import { recipeRepository } from './RecipeRepository';
 import { RecipeVisualization } from './RecipeVisualization';
 
-export function RecipesComponent() {
+export function EventsComponent() {
     const [recipes, setRecipes] = useState<IdentifiableRecipe[]>();
     useEffect(() => {
         recipeRepository.getAllRecipes().then(recipes => {

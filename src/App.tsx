@@ -7,11 +7,11 @@ import { getLoginStatus } from './Authentication/AuthenticationService';
 import { UsersComponent } from './Users/UsersComponent';
 import { EditUserComponent } from './Users/EditUserComponent';
 import { userRepository } from './Users/UserRepository';
-import { RecipesComponent } from './Recipes/RecipesComponent';
-import { AddRecipeForm } from './Recipes/AddRecipe';
-import { EditRecipeForm } from './Recipes/EditRecipe';
-import { recipeRepository } from './Recipes/RecipeRepository';
 import { RequireAuthentication } from './Authentication/RequireAuthentication';
+import { EditEventForm } from './Events/EditEvent';
+import { eventRepository } from './Events/EventRepository';
+import { AddEventForm } from './Events/AddEvent';
+import { EventsComponent } from './Events/EventsComponent';
 
 
 const router = createBrowserRouter([
@@ -43,28 +43,28 @@ const router = createBrowserRouter([
                 ],
             },
             {
-                path: "recipes",
+                path: "events",
                 element: 
                     <RequireAuthentication>
-                        <RecipesComponent />
+                        <EventsComponent />
                     </RequireAuthentication>,
                 children: [
                     {
-                        path: ":recipeId",
+                        path: ":eventId",
                         element: 
                             <RequireAuthentication>
-                                <EditRecipeForm />
+                                <EditEventForm />
                             </RequireAuthentication>,
                         loader: async ({ params }) => { 
-                            const recipe = await recipeRepository.getRecipe(params.recipeId ?? ""); 
-                            return { recipe: recipe, userId: getLoginStatus() };
+                            const event = await eventRepository.getEvent(params.eventId ?? ""); 
+                            return { event: event, userId: getLoginStatus() };
                         }
                     }
                 ]
             },
             {
-                path: "add-recipe",
-                element: <AddRecipeForm/>,
+                path: "add-event",
+                element: <AddEventForm/>,
                 loader:  getLoginStatus
             }
         ]
