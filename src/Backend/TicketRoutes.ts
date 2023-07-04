@@ -11,5 +11,5 @@ ticketRouter.get('/tickets', authenticateUser, async (req: Request, res: Respons
 
 
     const tickets = await ticketDatabaseRepository.getTicketsForUser(user._id);
-    res.status(200).json({ tickets: tickets });
+    res.status(200).json(tickets);
 });

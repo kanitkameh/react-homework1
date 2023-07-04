@@ -1,4 +1,4 @@
-import { Ticket } from "./Ticket";
+import { IdentifiableTicket } from "./Ticket";
 
 
 class TicketsRepository {
@@ -17,8 +17,10 @@ class TicketsRepository {
     async getMyTickets(){
         let response = await fetch(this.backendServerPath+'/tickets', {
             method: 'GET',
+            credentials: "include",
+            mode: "cors",
         })
-        let json: Ticket[] = await response.json()
+        let json: IdentifiableTicket[] = await response.json()
         return json
     }
 }

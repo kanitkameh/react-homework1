@@ -5,7 +5,7 @@ interface IdentifiableTicketProps {
   ticket: IdentifiableTicket;
 }
 
-export const IdentifiableTicketComponent: React.FC<IdentifiableTicketProps> = ({ ticket }) => {
+export const TicketVisualization: React.FC<IdentifiableTicketProps> = ({ ticket }) => {
   return (
     <div className="ticket-card">
       <h2>Ticket ID: {ticket._id}</h2>

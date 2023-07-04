@@ -12,6 +12,7 @@ import { EditEventForm } from './Events/EditEvent';
 import { eventRepository } from './Events/EventRepository';
 import { AddEventForm } from './Events/AddEvent';
 import { EventsComponent } from './Events/EventsComponent';
+import { TicketsComponent } from './Ticket/TicketsComponent';
 
 
 const router = createBrowserRouter([
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
                         }
                     }
                 ]
+            },
+            {
+                path: "my-tickets",
+                element: <TicketsComponent></TicketsComponent>,
             },
             {
                 path: "add-event",
