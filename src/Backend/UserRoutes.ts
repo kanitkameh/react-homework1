@@ -1,10 +1,23 @@
 import express from 'express';
 import { userDatabaseRepository } from '../Users/UserDatabaseRepository';
-import { userSchema, User, userDtoSchema } from '../Users/User';
+import { userSchema, User, userDtoSchema, IdentifiableUser } from '../Users/User';
 import { ObjectId } from 'mongodb';
 import { bodySchemaValidationMiddleware } from './SchemaValidation';
 import { CustomSession, authenticateUser } from './Authentication';
 
+
+const authorizeUser = async (req: any, res: any, next: any) => {
+    const session = req.session as CustomSession
+    const user: IdentifiableUser = session.user!
+
+    const userId = req.params.userId;
+
+    if(userId == user._id){
+        next()
+    } else {
+        res.status(403).json({ error: 'Unauthorized: You are trying to modify an account which is not yours.' });
+    }
+}
 // User routes
 export const userRouter = express.Router()
 
@@ -44,7 +57,7 @@ userRouter.route("/users/:userId").get(async (req, res) => {
     } else {
         res.sendStatus(404)
     }
-}).put(bodySchemaValidationMiddleware(userSchema), async (req, res) => {
+}).put(bodySchemaValidationMiddleware(userSchema), authenticateUser, authorizeUser, async (req, res) => {
     console.log("Updating user: ")
     const id = req.body._id;
     // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
@@ -53,7 +66,7 @@ userRouter.route("/users/:userId").get(async (req, res) => {
         res.status(404)
     }
     res.json(result)
-}).delete(async (req, res) => {
+}).delete(bodySchemaValidationMiddleware(userSchema), authenticateUser, authorizeUser, async (req, res) => {
     const result = await userDatabaseRepository.deleteUser(new ObjectId(req.params.userId))
     if(result.deletedCount === 0){
         res.status(404)

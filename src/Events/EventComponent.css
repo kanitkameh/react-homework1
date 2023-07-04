@@ -18,6 +18,16 @@
   cursor: pointer;
 }
 
+.review-button {
+  background-color: blue;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
 .edit-button {
   background-color: blue;
   color: white;

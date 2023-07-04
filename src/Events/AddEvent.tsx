@@ -74,7 +74,7 @@ export const AddEventForm = () => {
       <input type="text" id="venue" name="venue" value={eventData.venue} onChange={handleInputChange} required />
 
       <label htmlFor="date">Date:</label>
-      <input type="date" id="date" name="date" value={eventData.date.toISOString().substr(0, 10)} onChange={handleDateChange} required />
+      <input type="date" id="date" name="date" value={eventData.date.toString().substr(0, 10)} onChange={handleDateChange} required />
 
       <label htmlFor="organizerId">Organizer ID:</label>
       <input type="text" id="organizerId" name="organizerId" value={eventData.organizerId} onChange={handleInputChange} required />

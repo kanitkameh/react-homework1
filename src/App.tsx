@@ -13,6 +13,7 @@ import { eventRepository } from './Events/EventRepository';
 import { AddEventForm } from './Events/AddEvent';
 import { EventsComponent } from './Events/EventsComponent';
 import { TicketsComponent } from './Ticket/TicketsComponent';
+import path from 'path';
 
 
 const router = createBrowserRouter([
@@ -52,14 +53,22 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: ":eventId",
-                        element: 
-                            <RequireAuthentication>
-                                <EditEventForm />
-                            </RequireAuthentication>,
-                        loader: async ({ params }) => { 
-                            const event = await eventRepository.getEvent(params.eventId ?? ""); 
-                            return { event: event, userId: getLoginStatus() };
-                        }
+                        children: [{
+                                path: "edit",
+                                element: 
+                                <RequireAuthentication>
+                                    <EditEventForm/>
+                                </RequireAuthentication>,
+                                loader: async ({ params }) => { 
+                                    const event = await eventRepository.getEvent(params.eventId ?? ""); 
+                                    return { event: event, userId: getLoginStatus() };
+                                },
+                            },
+                            {
+                                path: "leave-review",
+                                element: <div>rate</div>
+                            },
+                        ]
                     }
                 ]
             },

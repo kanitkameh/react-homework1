@@ -9,6 +9,8 @@ class EventRepository {
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "include",
+            mode: "cors",
             body: JSON.stringify(event)
         })
     }
@@ -33,6 +35,8 @@ class EventRepository {
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "include",
+            mode: "cors",
             body: JSON.stringify(event)
         })
     }
@@ -41,7 +45,9 @@ class EventRepository {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: "include",
+            mode: "cors",
         })
     }
 }

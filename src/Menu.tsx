@@ -22,7 +22,7 @@ export function Menu() {
                 <span className='menu-item'><Link to='/add-event'>Add Event</Link></span>
                 <span className='menu-item'><Link to='/users'>Users</Link></span>
                 <span className='menu-item'><Link to='/my-tickets'>My Tickets</Link></span>
-                <span className='menu-item'><Link to='/event-groups'>Event Groups</Link></span>
+                {/* <span className='menu-item'><Link to='/event-groups'>Event Groups</Link></span> */}
                 <span className='menu-item'><button onClick={logout}>Logout</button></span>
             </div>
             <Outlet />

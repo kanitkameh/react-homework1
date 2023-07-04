@@ -5,6 +5,7 @@ import { ticketsRepository } from '../Ticket/TicketsRepository';
 import { userRepository } from '../Users/UserRepository';
 import { RequireAuthentication } from '../Authentication/RequireAuthentication';
 import { getLoginStatus } from '../Authentication/AuthenticationService';
+import { Link } from 'react-router-dom';
 
 interface EventProps {
   event: IdentifiableEvent;
@@ -39,8 +40,8 @@ export const EventVisualization: React.FC<EventProps> = ({ event }) => {
       { getLoginStatus() != null &&
         <div className="button-group">
           <button className="purchase-button" onClick={() => ticketsRepository.purchaseTicket(event._id)}>Purchase Ticket</button>
-          <button className="leave-review">Review</button>
-          { (event.organizerId == userId) && <button className="edit-button">Edit</button>}
+          <Link to="leave-review" className='review-button'>Leave Review</Link>
+          { (event.organizerId == userId) && <Link to={event._id+"/edit"} className='edit-button'>Edit</Link>}
         </div>
        }
     </div>
