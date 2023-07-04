@@ -3,10 +3,16 @@ import { userDatabaseRepository } from '../Users/UserDatabaseRepository';
 import { userSchema, User, userDtoSchema } from '../Users/User';
 import { ObjectId } from 'mongodb';
 import { bodySchemaValidationMiddleware } from './SchemaValidation';
+import { CustomSession, authenticateUser } from './Authentication';
 
 // User routes
 export const userRouter = express.Router()
 
+userRouter.get("/users/current", authenticateUser, (req, res) => {
+    const session = req.session as CustomSession
+    res.status(200)
+    res.json(session.user)
+})
 userRouter.route("/users").get( async (req, res) => {
     const username = req.query.username
     if (username){

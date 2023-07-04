@@ -55,6 +55,19 @@ class UserRepository {
             body: JSON.stringify(user)
         })
     }
+    
+    async getCurrentUser(){
+        const resopnse = await fetch(this.backendServerPath+'/users/current', {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            mode: "cors",
+        })
+        const user: IdentifiableUser = await resopnse.json() 
+        return user
+    }
 }
 
 export let userRepository = new UserRepository()

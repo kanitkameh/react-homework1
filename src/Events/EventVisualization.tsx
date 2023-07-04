@@ -1,12 +1,18 @@
-import React from 'react';
-import { Event } from './Event';
+import React, { useEffect, useState } from 'react';
+import { Event, IdentifiableEvent } from './Event';
 import './EventComponent.css';
+import { ticketsRepository } from '../Ticket/TicketsRepository';
+import { userRepository } from '../Users/UserRepository';
 
 interface EventProps {
-  event: Event;
+  event: IdentifiableEvent;
 }
 
 export const EventVisualization: React.FC<EventProps> = ({ event }) => {
+    const [userId, setUserId] = useState("")
+    useEffect(() => {
+        userRepository.getCurrentUser().then(user => setUserId(user._id))
+    },[])
   return (
     <div className="event-card">
       <h2>{event.name}</h2>
@@ -29,8 +35,9 @@ export const EventVisualization: React.FC<EventProps> = ({ event }) => {
       )}
       {event.photo && <img src={event.photo.toString()} alt="Event" />}
       <div className="button-group">
-        <button className="purchase-button">Purchase Ticket</button>
-        <button className="edit-button">Edit</button>
+        <button className="purchase-button" onClick={() => ticketsRepository.purchaseTicket(event._id)}>Purchase Ticket</button>
+        <button className="Leave review">Review</button>
+        { (event.organizerId == userId) && <button className="edit-button">Edit</button>}
       </div>
     </div>
   );
