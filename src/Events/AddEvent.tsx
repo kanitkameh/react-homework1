@@ -44,13 +44,14 @@ export const AddEventForm = () => {
     }));
   };
 
-  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, valueAsDate } = event.target;
-    setEventData((prevData) => ({
-      ...prevData,
-      [name]: valueAsDate,
-    }));
-  };
+const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const { name, valueAsDate } = event.target;
+  const formattedDate = valueAsDate?.toISOString().split('T')[0] ?? '';
+  setEventData((prevData) => ({
+    ...prevData,
+    [name]: formattedDate,
+  }));
+};
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
