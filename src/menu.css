@@ -1,8 +1,19 @@
-.menu-item {
-    padding: 50px;
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  background-color: #c7bbff;
+  padding: 10px;
 }
 
-.navbar {
-    border: 1px solid black;
-    padding: 5px;
+.menu-item {
+  button,
+  a {
+    background-color: #2f00ff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #ffffff;
+  }
 }

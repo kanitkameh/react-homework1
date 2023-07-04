@@ -1,7 +1,7 @@
 import express from 'express';
 import { userDatabaseRepository } from '../Users/UserDatabaseRepository';
-import { userSchema, User, userDtoSchema, IdentifiableUser } from '../Users/User';
-import { ObjectId } from 'mongodb';
+import { userSchema, User, userDtoSchema, IdentifiableUser, Role } from '../Users/User';
+import { Admin, ObjectId } from 'mongodb';
 import { bodySchemaValidationMiddleware } from './SchemaValidation';
 import { CustomSession, authenticateUser } from './Authentication';
 
@@ -12,7 +12,7 @@ const authorizeUser = async (req: any, res: any, next: any) => {
 
     const userId = req.params.userId;
 
-    if(userId == user._id){
+    if(userId == user._id || user.role ==  Role.Admin){
         next()
     } else {
         res.status(403).json({ error: 'Unauthorized: You are trying to modify an account which is not yours.' });
