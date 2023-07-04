@@ -1,6 +1,7 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { eventRepository } from './EventRepository';
 import { EventDTO } from './Event';
+import { userRepository } from '../Users/UserRepository';
 
 interface Event {
   name: string;
@@ -13,11 +14,23 @@ interface Event {
 }
 
 export const AddEventForm = () => {
+  const [user, setUser] = useState({userId: ""})
+  useEffect(() => {userRepository.getCurrentUser().then(user => 
+  {
+    setUser({ userId: user._id })
+
+    setEventData((prevData) => ({
+      ...prevData,
+      organizerId: user._id,
+    }))
+  })
+  }, [])
+
   const [eventData, setEventData] = useState<Event>({
     name: '',
     venue: '',
     date: new Date(),
-    organizerId: '',
+    organizerId: user.userId,
     description: '',
     ticketPrice: 0,
     photo: undefined,
