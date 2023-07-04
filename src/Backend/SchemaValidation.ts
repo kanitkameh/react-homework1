@@ -1,4 +1,4 @@
-import express, { NextFunction } from 'express';
+import { NextFunction } from 'express';
 import { ObjectSchema, ValidationError } from 'yup';
 
 export const bodySchemaValidationMiddleware = (schema: ObjectSchema<any>) => {

@@ -1,10 +1,10 @@
 import express, { NextFunction } from 'express';
 import { userDatabaseRepository } from '../Users/UserDatabaseRepository';
-import { User } from '../Users/User';
+import { IdentifiableUser, User } from '../Users/User';
 import session, { Session } from 'express-session';
 
 export interface CustomSession extends Session {
-  user?: User;
+  user?: IdentifiableUser;
 }
 
 export const authenticationRouter = express.Router()

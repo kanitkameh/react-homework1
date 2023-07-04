@@ -15,7 +15,8 @@ userRouter.route("/users").get( async (req, res) => {
         console.log(user);
         res.json(user)
     } else {
-        const users = await userDatabaseRepository.getAllUsers();
+        //TODO it is unsafe to return whole users which have field `password`
+        const users = await userDatabaseRepository.getAllUsers(); 
         res.json(users)
     }
 }).post(bodySchemaValidationMiddleware(userDtoSchema), async (req, res) => {

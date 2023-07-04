@@ -5,6 +5,7 @@ import { recipeDatabaseRepository } from './Recipes/RecipeDatabaseRepository';
 import { Recipe, validateRecipe } from './Recipes/Recipe';
 import { authenticateUser, authenticationRouter, CustomSession } from './Backend/Authentication';
 import { userRouter } from './Backend/UserRoutes';
+import { eventRouter } from './Backend/EventRoutes';
 
 const app = express()
 
@@ -82,6 +83,7 @@ app.route("/recipes/:recipeId").get(async (req, res) => {
 
 app.use('/', authenticationRouter)
 app.use('/', userRouter)
+app.use('/', eventRouter)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
