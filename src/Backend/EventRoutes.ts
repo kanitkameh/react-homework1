@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Event, eventDtoSchema } from '../Events/Event';
-import { Review } from '../Events/Review';
+import { Review, ReviewDTO, reviewDtoSchema, reviewSchema } from '../Events/Review';
 import { bodySchemaValidationMiddleware } from './SchemaValidation';
 import { eventDatabaseRepository } from '../Events/EventDatabaseRepository';
 import { ObjectId } from 'mongodb';
@@ -77,6 +77,7 @@ eventRouter.put('/events/:id', authenticateUser, authorizeUser, bodySchemaValida
         date,
         description,
         ticketPrice,
+        photo
     } = req.body;
 
     const event = await eventDatabaseRepository.getEvent(new ObjectId(eventId));
@@ -86,6 +87,7 @@ eventRouter.put('/events/:id', authenticateUser, authorizeUser, bodySchemaValida
         event.date = date
         event.description = description
         event.ticketPrice = ticketPrice
+        event.photo = photo
 
 
         // Update event in the database
@@ -94,7 +96,7 @@ eventRouter.put('/events/:id', authenticateUser, authorizeUser, bodySchemaValida
         if (updated) {
             res.status(200).json({ message: 'Event updated successfully' });
         } else {
-            res.status(404).json({ error: 'Event not found' });
+            res.status(404).json({ error: 'updated Event not found' });
         }
     } else {
         res.status(404).json({ error: 'Event not found' });
@@ -139,14 +141,26 @@ eventRouter.get('/events', async (req: Request, res: Response) => {
 });
 
 
-eventRouter.post('/events/:id/review', authenticateUser, async (req: Request, res: Response) => {
+eventRouter.post('/events/:id/review', authenticateUser, bodySchemaValidationMiddleware(reviewDtoSchema), async (req: Request, res: Response) => {
+    const session = req.session as CustomSession
+    const user: IdentifiableUser = session.user!
+
     const eventId = req.params.id;
 
-    const event = await eventDatabaseRepository.getEvent(new ObjectId(eventId));
+    const review = req.body as ReviewDTO;
 
+    let event = await eventDatabaseRepository.getEvent(new ObjectId(eventId));
     if (event) {
-        //TODO
-        res.status(200).json({ message: 'not implemented yet' });
+        event.reviews.push(new Review(user._id, review.stars, review.text))
+
+        // Update event in the database
+        const updated = await eventDatabaseRepository.updateEvent(event);
+
+        if (updated) {
+            res.status(200).json({ message: 'Event reviewed successfully' });
+        } else {
+            res.status(404).json({ error: 'Updated Event not found' });
+        }
     } else {
         res.status(404).json({ error: 'Event not found' });
     }

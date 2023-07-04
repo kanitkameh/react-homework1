@@ -10,7 +10,9 @@ export class EventDTO {
     public organizerId: string,
     public description: string,
     public ticketPrice: number,
-    public reviews: Review[]){}
+    public reviews: Review[],
+    public photo?: URL,
+    ){}
 }
 
 export class Event {
@@ -22,6 +24,7 @@ export class Event {
     description: string;
     ticketPrice: number;
     reviews: Review[];//TODO create reviews
+    photo?: URL
 
     constructor(
         name: string,
@@ -30,7 +33,8 @@ export class Event {
         organizerId: string,
         description: string,
         ticketPrice: number,
-        reviews: Review[]
+        reviews: Review[],
+        photo?: URL
     ){
         this.name = name
         this.venue = venue
@@ -39,6 +43,7 @@ export class Event {
         this.description = description
         this.ticketPrice = ticketPrice
         this.reviews = reviews
+        this.photo = photo
     }
 }
 
@@ -83,4 +88,5 @@ export const eventSchema = yup.object({
         text: yup.string().required(),
       })
     ),
+    photo: yup.string().url().optional()
   });
