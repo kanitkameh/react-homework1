@@ -59,7 +59,7 @@ userRouter.route("/users/:userId").get(async (req, res) => {
     }
 }).put(bodySchemaValidationMiddleware(userSchema), authenticateUser, authorizeUser, async (req, res) => {
     console.log("Updating user: ")
-    const id = req.body._id;
+    const id = req.params.userId;
     // The id converts to string when send/receiving requests so we want to convert it back to ObjectId
     const result = await userDatabaseRepository.updateUser({ ...req.body, _id: new ObjectId(id) })
     if (result.modifiedCount === 0) {

@@ -23,8 +23,6 @@ authenticationRouter.use(
 
 // Custom middleware to check if the user is authenticated
 export const authenticateUser = (req: any, res: any, next: NextFunction) => {
-    console.log((req.session))
-    console.log((req.session.user))
     if (req.session && req.session.user) {
         // User is authenticated, proceed to the next middleware or route
         next();

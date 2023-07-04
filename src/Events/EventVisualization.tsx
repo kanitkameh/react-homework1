@@ -40,7 +40,7 @@ export const EventVisualization: React.FC<EventProps> = ({ event }) => {
       { getLoginStatus() != null &&
         <div className="button-group">
           <button className="purchase-button" onClick={() => ticketsRepository.purchaseTicket(event._id)}>Purchase Ticket</button>
-          <Link to="leave-review" className='review-button'>Leave Review</Link>
+          <Link to={event._id + "/leave-review"} className='review-button'>Leave Review</Link>
           { (event.organizerId == userId) && <Link to={event._id+"/edit"} className='edit-button'>Edit</Link>}
         </div>
        }

@@ -1,4 +1,5 @@
 import { IdentifiableEvent, Event, EventDTO } from "./Event";
+import { Review, ReviewDTO } from "./Review";
 
 class EventRepository {
     backendServerPath = "http://localhost:2704";
@@ -43,6 +44,16 @@ class EventRepository {
     async deleteEvent(event: IdentifiableEvent) {
         fetch(this.backendServerPath+'/events/'+event._id, {
             method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            mode: "cors",
+        })
+    }
+    async reviewEvent(eventId: string, review: ReviewDTO){
+        fetch(this.backendServerPath+'/events/:id/review', {
+            method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             },
